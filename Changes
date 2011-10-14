@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.02  Fri Oct 14 21:08:23 GMT 2011
     - Skip storage test when DBI and DBD::SQLite are not present
 
 0.01  Fri Oct 14 19:52:25 GMT 2011
