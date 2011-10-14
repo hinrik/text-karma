@@ -1,0 +1,114 @@
+=encoding utf8
+
+=head1 NAME
+
+Text::Karma - Process (and optionally store) karma points
+
+=head1 SYNOPSIS
+
+ use 5.010;
+ use strict;
+ use warnings;
+ use Text::Karma;
+ use DBI;
+
+ my $dbh = DBI->connect("dbi:SQLite:dbname=karma.sqlite","","");
+ my $karma = Text::Karma(dbh => $dbh);
+
+ $karma->process_karma(
+     nick  => 'someone',
+     who   => 'someone!from@somewhere',
+     where => '#in_here',
+     str   => "this thing++ is awesome # some cool comment",
+ );
+
+ say "Karma for thing: ".$karma->get_karma("thing");
+
+=head1 METHODS
+
+=head2 C<new>
+
+Constructs and returns a Text::Karma object. Takes the following arguments:
+
+B<'dbh'>, an optional database handle.
+
+B<'table_prefix'>, a prefix to use for the table that will be created if
+you supplied a database handle.
+
+=head2 C<process_karma>
+
+Processes karma from a string, and returns the results. They will also be
+stored in the database if you supplied a database handle to L<C<new>|/new>.
+Takes the following arguments:
+
+B<'nick'>, the nickname of the person who wrote the text. Required.
+
+B<'who'>, the full name of the person who wrote the text. Required.
+
+B<'where'>, the place where the person wrote the text. Required.
+
+B<'str'>, the text that the person wrote. Required.
+
+B<'self_karma'>, whether to allow people to affect their own karma. Optional.
+Defaults to false.
+
+=head2 C<get_karma>
+
+This method returns the karma for a given subject from the database. Takes
+one argument, a subject to look up. If the subject is unknown, nothing is
+returns. Otherwise, you'll get a hashref with the following keys:
+
+B<'up'>, number of karma upvotes for the subject.
+
+B<'down'>, number of karma downvotes for the subject.
+
+B<'score'>, the karma score for the subject (B<'up'> minus B<'down'>).
+
+=head1 AUTHOR
+
+Hinrik E<Ouml>rn SigurE<eth>sson <hinrik.sig@gmail.com>
+
+Apocalypse <APOCAL@cpan.org>
+
+=head1 CONTACT
+
+=head2 Email
+
+You can email the authors of this module at <APOCAL@cpan.org> or
+C<hinrik.sig@gmail.com> asking for help with any problems you have.
+
+=head2 Internet Relay Chat
+
+You can get live help by using IRC (Internet Relay Chat). If you don't know
+what IRC is, please read this excellent guide:
+L<http://en.wikipedia.org/wiki/Internet_Relay_Chat>. Please be courteous
+and patient when talking to us, as we might be busy or sleeping! You can
+join the following networks/channels and get help:
+
+=over 4
+
+=item * MAGnet
+
+You can connect to the server at 'irc.perl.org', join the C<#perl-help>
+channel, and talk to C<>Apocalypse> or C<Hinrik>
+
+=item * FreeNode
+
+You can connect to the server at 'irc.freenode.net', join the C<#perl>
+channel, and talk to C<>Apocal> or C<literal>
+
+=item * EFnet
+
+You can connect to the server at 'irc.efnet.org', join the C<#perl>
+channel, and talk to C<>Ap0cal> or C<Hinrik>
+
+=back
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2011 Hinrik E<Ouml>rn SigurE<eth>sson and Apocalypse
+
+This program is free software, you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
