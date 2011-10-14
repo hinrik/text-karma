@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    - Skip storage test when DBI and DBD::SQLite are not present
 
 0.01  Fri Oct 14 19:52:25 GMT 2011
     - Initial release, forked from Apocalype's pocoirc-plugin-karma

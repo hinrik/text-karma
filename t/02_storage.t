@@ -4,7 +4,14 @@ use warnings;
 use DBI;
 use File::Temp 'tempfile';
 use Text::Karma;
-use Test::More tests => 4;
+use Test::More;
+
+eval { require DBI; require DBD::SQLite; };
+if ($@) {
+    plan skip_all => 'DBI and DBD::SQLite are required for this test';
+}
+
+plan tests => 4;
 
 my (undef, $filename) = tempfile(UNLINK => 1);
 my $dbh = DBI->connect("dbi:SQLite:dbname=$filename",'','');
