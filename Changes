@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.04  Sun Oct 16 18:29:38 GMT 2011
     - Don't use exclusive file locking in tests (fails on *BSD)
 
 0.03  Sun Oct 16 07:35:11 GMT 2011
