@@ -74,8 +74,8 @@ Apocalypse <APOCAL@cpan.org>
 
 =head2 Email
 
-You can email the authors of this module at <APOCAL@cpan.org> or
-C<hinrik.sig@gmail.com> asking for help with any problems you have.
+You can email the authors of this module at C<hinrik.sig@gmail.com>
+or C<APOCAL@cpan.org> asking for help with any problems you have.
 
 =head2 Internet Relay Chat
 
@@ -90,17 +90,17 @@ join the following networks/channels and get help:
 =item * MAGnet
 
 You can connect to the server at 'irc.perl.org', join the C<#perl-help>
-channel, and talk to C<>Apocalypse> or C<Hinrik>
+channel, and talk to C<Hinrik> or C<Apocalypse>.
 
 =item * FreeNode
 
 You can connect to the server at 'irc.freenode.net', join the C<#perl>
-channel, and talk to C<>Apocal> or C<literal>
+channel, and talk to C<literal> or C<Apocal>.
 
 =item * EFnet
 
 You can connect to the server at 'irc.efnet.org', join the C<#perl>
-channel, and talk to C<>Ap0cal> or C<Hinrik>
+channel, and talk to C<Hinrik> or C<Ap0cal>.
 
 =back
 
