@@ -13,7 +13,7 @@ if ($@) {
 
 plan tests => 4;
 
-my (undef, $filename) = tempfile(UNLINK => 1);
+my (undef, $filename) = tempfile(UNLINK => 1, EXLOCK => 0);
 my $dbh = DBI->connect("dbi:SQLite:dbname=$filename",'','');
 my $karma = Text::Karma->new(dbh => $dbh);
 

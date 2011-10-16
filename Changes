@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    - Don't use exclusive file locking in tests (fails on *BSD)
 
 0.03  Sun Oct 16 07:35:11 GMT 2011
     - Modify and document the return value of process_karma()
