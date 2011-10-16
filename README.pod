@@ -52,6 +52,15 @@ B<'str'>, the text that the person wrote. Required.
 B<'self_karma'>, whether to allow people to affect their own karma. Optional.
 Defaults to false.
 
+The return value will be an arrayref containing a hashref for each karma
+operation. They will have the following keys:
+
+B<'subject'>, the subject of the karma operation (e.g. 'foo' in 'foo++').
+
+B<'op'>, the karma operation (0 if it was '--', 1 if it was '++').
+
+B<'comment'>, a potential comment for the karma change.
+
 =head2 C<get_karma>
 
 This method returns the karma for a given subject from the database. Takes

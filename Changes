@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    - Modify and document the return value of process_karma()
 
 0.02  Fri Oct 14 21:08:23 GMT 2011
     - Skip storage test when DBI and DBD::SQLite are not present

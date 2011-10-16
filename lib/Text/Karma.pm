@@ -98,7 +98,7 @@ sub process_karma {
 
     # get the list of karma matches
     my @matches = $args{str} =~ /(\([^\)]+\)|\S+)(\+\+|--)\s*(\#.+)?/g;
-    my @karmas;
+    my @changes;
     if (@matches) {
         while (my ($subject, $op, $comment) = splice @matches, 0, 3) {
             # clean the karma of spaces and () as we had to capture them
@@ -113,31 +113,26 @@ sub process_karma {
             else {
                 # clean the comment
                 $comment =~ s/^\s*\#\s*// if defined $comment;
+                $op = $op eq '++' ? 1 : 0;
+                my $time = time;
 
-                my $karma = {
-                    who       => $args{who},
-                    where     => $args{where},
-                    timestamp => scalar time,
-                    subject   => $subject,
-                    op        => ($op eq '++' ? 1 : 0),
-                    comment   => $comment,
-                    str       => $args{str},
+                push @changes, {
+                    subject => $subject,
+                    op      => $op,
+                    comment => $comment,
                 };
 
-                push @karmas, $karma;
                 if ($self->dbh) {
                     my $sth = $self->_sth_add_karma;
                     $sth->execute(
-                        @{ $karma }{
-                            qw(who where timestamp subject op comment str)
-                        }
+                        $args{who}, $args{where}, $time, $subject, $op, $comment, $args{str},
                     ) or die $sth->errstr;
                 }
             }
         }
     }
 
-    return \@karmas;
+    return \@changes;
 }
 
 sub get_karma {
@@ -223,6 +218,15 @@ B<'str'>, the text that the person wrote. Required.
 
 B<'self_karma'>, whether to allow people to affect their own karma. Optional.
 Defaults to false.
+
+The return value will be an arrayref containing a hashref for each karma
+operation. They will have the following keys:
+
+B<'subject'>, the subject of the karma operation (e.g. 'foo' in 'foo++').
+
+B<'op'>, the karma operation (0 if it was '--', 1 if it was '++').
+
+B<'comment'>, a potential comment for the karma change.
 
 =head2 C<get_karma>
 
