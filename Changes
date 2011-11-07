@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    - Removed bare "use DBI;" from storage test
 
 0.04  Sun Oct 16 18:29:38 GMT 2011
     - Don't use exclusive file locking in tests (fails on *BSD)

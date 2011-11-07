@@ -1,7 +1,6 @@
 use 5.010;
 use strict;
 use warnings;
-use DBI;
 use File::Temp 'tempfile';
 use Text::Karma;
 use Test::More;
