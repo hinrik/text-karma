@@ -163,6 +163,55 @@ sub get_karma {
     }
 }
 
+sub _get_karma_ordered {
+    my( $self, %args ) = @_;
+
+    # this is a bit of a hack but accomplishes everything in one query.
+    # SUM(mode) will return the amount of positive votes, and COUNT(mode)
+    # will return the amount of *all* votes, so subtracting the sum from
+    # the count will give you the amount of negative votes.
+    my $sql = 'SELECT karma, SUM(mode) - (COUNT(mode) - SUM(mode)) AS total FROM karma';
+    $sql .= ' GROUP BY karma';
+    if ( ! $args{'case_sens'} ) {
+        $sql .= ' COLLATE NOCASE';
+    }
+    $sql .= ' ORDER BY total ' . ($args{'side'} eq 'low' ? 'ASC' : 'DESC') . ' LIMIT ?';
+
+    # get the DB and pull the info
+    croak('No database handle supplied') if !$self->dbh;
+    my $sth = $self->dbh->prepare_cached( $sql ) or die $self->dbh->errstr;
+    $sth->execute( $args{'limit'} || 5 ) or die $sth->errstr;
+
+    my @karma_list;
+    while ( my $row = $sth->fetchrow_arrayref ) {
+        my( $karma, $total ) = @{$row};
+
+        # don't show negative karma in High, and positive karma in Low
+        if ( $args{'show_all'} || 1 ) {
+            if ( $args{'side'} eq 'high' ) {
+                next if $total < 0;
+            } else {
+                next if $total >= 0;
+            }
+        }
+
+        push( @karma_list, { 'subject' => $karma, 'score' => $total } );
+    }
+
+    $sth->finish;
+
+    return \@karma_list;
+}
+
+sub get_karma_high {
+    my( $self, %args ) = @_;
+    return $self->_get_karma_ordered( side => 'high', %args );
+}
+sub get_karma_low {
+    my( $self, %args ) = @_;
+    return $self->_get_karma_ordered( side => 'low', %args );
+}
+
 __PACKAGE__->meta->make_immutable;
 
 =encoding utf8
@@ -240,11 +289,30 @@ B<'down'>, number of karma downvotes for the subject.
 
 B<'score'>, the karma score for the subject (B<'up'> minus B<'down'>).
 
+=head2 C<get_karma_high>
+
+This method returns the subjects with the most positive karma.
+
+Returns an arrayref filled with hashrefs:
+
+B<'subject'>, name of the subject
+
+B<'score'>, the karma score for the subject (B<'up'> minus B<'down'>).
+
+=head2 C<get_karma_low>
+
+This method returns the subjects with the most negative karma. Behaves
+the same as C<get_karma_high> with respect to return values.
+
 =head1 AUTHOR
 
 Hinrik E<Ouml>rn SigurE<eth>sson <hinrik.sig@gmail.com>
 
 Apocalypse <APOCAL@cpan.org>
+
+=head2 CONTRIBUTOR
+
+Jan A. (Treeki) <treeki@gmail.com>
 
 =head1 CONTACT
 

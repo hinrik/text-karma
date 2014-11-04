@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    - Add the get_karma_high and get_karma_low commands, thanks Treeki!
 
 0.05  Mon Nov 7 19:36:30 UTC 2011
     - Removed bare "use DBI;" from storage test
