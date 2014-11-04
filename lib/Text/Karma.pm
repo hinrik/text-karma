@@ -202,12 +202,12 @@ sub _get_karma_ordered {
 }
 
 sub get_karma_high {
-    my( $self, $limit ) = @_;
-    return $self->_get_karma_ordered( side => 'high', limit => $limit );
+    my( $self, %args ) = @_;
+    return $self->_get_karma_ordered( side => 'high', %args );
 }
 sub get_karma_low {
-    my( $self, $limit ) = @_;
-    return $self->_get_karma_ordered( side => 'low', limit => $limit );
+    my( $self, %args ) = @_;
+    return $self->_get_karma_ordered( side => 'low', %args );
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -289,8 +289,7 @@ B<'score'>, the karma score for the subject (B<'up'> minus B<'down'>).
 
 =head2 C<get_karma_high>
 
-This method returns the subjects with the most positive karma. Takes one
-optional argument, the size of the list to retrieve - defaults to 5.
+This method returns the subjects with the most positive karma.
 
 Returns an arrayref filled with hashrefs:
 
@@ -300,14 +299,8 @@ B<'score'>, the karma score for the subject (B<'up'> minus B<'down'>).
 
 =head2 C<get_karma_low>
 
-This method returns the subjects with the most negative karma. Takes one
-optional argument, the size of the list to retrieve - defaults to 5.
-
-Returns an arrayref filled with hashrefs:
-
-B<'subject'>, name of the subject
-
-B<'score'>, the karma score for the subject (B<'up'> minus B<'down'>).
+This method returns the subjects with the most negative karma. Behaves
+the same as C<get_karma_high> with respect to return values.
 
 =head1 AUTHOR
 
