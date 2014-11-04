@@ -172,14 +172,14 @@ sub _get_karma_ordered {
     # the count will give you the amount of negative votes.
     my $sql = 'SELECT karma, SUM(mode) - (COUNT(mode) - SUM(mode)) AS total FROM karma';
     $sql .= ' GROUP BY karma';
-    if ( ! $args->{case_sens} ) {
+    if ( ! $args{'case_sens'} ) {
         $sql .= ' COLLATE NOCASE';
     }
     $sql .= ' ORDER BY total ' . ($args{'side'} eq 'low' ? 'ASC' : 'DESC') . ' LIMIT ?';
 
     # get the DB and pull the info
-    my $dbh = $self->_get_dbi;
-    my $sth = $dbh->prepare_cached( $sql ) or die $dbh->errstr;
+    croak('No database handle supplied') if !$self->dbh;
+    my $sth = $self->dbh->prepare_cached( $sql ) or die $self->dbh->errstr;
     $sth->execute( $args{'limit'} || 5 ) or die $sth->errstr;
 
     my @karma_list;
@@ -187,10 +187,12 @@ sub _get_karma_ordered {
         my( $karma, $total ) = @{$row};
 
         # don't show negative karma in High, and positive karma in Low
-        if ( $args{'side'} eq 'high' ) {
-            next if $total < 0;
-        } else {
-            next if $total >= 0;
+        if ( $args{'show_all'} || 1 ) {
+            if ( $args{'side'} eq 'high' ) {
+                next if $total < 0;
+            } else {
+                next if $total >= 0;
+            }
         }
 
         push( @karma_list, { 'subject' => $karma, 'score' => $total } );

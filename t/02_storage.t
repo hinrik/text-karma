@@ -10,7 +10,7 @@ if ($@) {
     plan skip_all => 'DBI and DBD::SQLite are required for this test';
 }
 
-plan tests => 4;
+plan tests => 6;
 
 my (undef, $filename) = tempfile(UNLINK => 1, EXLOCK => 0);
 my $dbh = DBI->connect("dbi:SQLite:dbname=$filename",'','');
@@ -19,7 +19,7 @@ my $karma = Text::Karma->new(dbh => $dbh);
 $karma->process_karma(
     where => '#dsfdsf',
     who   => 'dfdsf',
-    str   => "foo++ bar++ bar++ bar++ bar--",
+    str   => "foo++ bar++ bar++ bar++ bar-- hey-- hey-- hey-- wassup--",
     nick  => 'dfdsf',
 );
 
@@ -59,3 +59,16 @@ is_deeply(
 );
 
 is($BAR_karma, undef, 'BAR is not bar');
+
+my $high_karma = $karma->get_karma_high;
+my $low_karma = $karma->get_karma_low;
+
+is_deeply( $high_karma, [
+    {'subject' => 'bar', 'score' => 2},
+    {'subject' => 'foo', 'score' => 1},
+], 'positive karma list matches' );
+
+is_deeply( $low_karma, [
+    {'subject' => 'hey', 'score' => -3},
+    {'subject' => 'wassup', 'score' => -1},
+], 'negative karma list matches' );
